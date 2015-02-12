@@ -81,7 +81,7 @@ public class Model: Events {
     }
     
     public func set(key:String, _ attribute:Any, options:[String:Any]? = nil) {
-        self.set([key:attribute], options: nil)
+        self.set([key:attribute], options: options)
     }
     
     public func unset(key:String) {
