@@ -258,7 +258,7 @@ public class Collection: Events {
         var copiedOptions = overwrittenDictionary!
         for (key, value) in dictionary! {
             if copiedOptions[key] == nil ||
-               copiedOptions[key] != nil && canOverwrite {
+               (copiedOptions[key] != nil && canOverwrite) {
                 copiedOptions[key] = value
             }
         }
