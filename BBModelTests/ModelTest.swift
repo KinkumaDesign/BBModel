@@ -147,6 +147,24 @@ class ModelTest: XCTestCase {
         })
         
         model.set("msg", "world")
+        
+        model = nil
+        
+        model = Model()
+        var count:Int = 0
+        model.on(Model.events.CHANGE, callback: { (model, options) -> Void in
+            count = count + 1
+            
+            model.off(Model.events.CHANGE, callbackId: (options?["callbackId"] as String))
+        })
+        
+        model.trigger(Model.events.CHANGE)
+        
+        XCTAssertTrue(count == 1)
+        
+        model.trigger(Model.events.CHANGE)
+        
+        XCTAssertTrue(count == 1)
     }
 }
 

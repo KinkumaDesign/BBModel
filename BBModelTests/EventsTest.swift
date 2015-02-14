@@ -96,24 +96,29 @@ class EventsTest: XCTestCase {
         var count = 0
         events.trigger("up")
         XCTAssertTrue(count == 0)
-        events.on("up", callback: { [unowned self](events, options) in
+        var callbackId:String?
+        callbackId = events.on("up", callback: { [unowned self](events, options) in
             count++
             XCTAssertTrue(events === self.events)
+            let optionCallbackId = options?["callbackId"] as String
+//            println("id1 = \(callbackId!)")
+//            println("id2 = \(optionCallbackId)")
+            XCTAssertEqual(callbackId!, optionCallbackId)
         })
         events.trigger("up")
         XCTAssertTrue(count == 1)
     }
     
     func test_off(){
-        var count = 0
+        var count:Int = 0
         events.trigger("up")
         XCTAssertTrue(count == 0)
         
-        events.on("up", callback: { [unowned self](events, options) in
+        let callbackId1 = events.on("up", callback: { [unowned self](events, options) in
             count++
             XCTAssertTrue(events === self.events)
         })
-        let callbackId = events.on("up", callback: { [unowned self](events, options) in
+        let callbackId2 = events.on("up", callback: { [unowned self](events, options) in
             count++
             XCTAssertTrue(events === self.events)
         })
@@ -121,7 +126,8 @@ class EventsTest: XCTestCase {
         events.trigger("up")
         
         XCTAssertTrue(count == 2)
-        events.off("up", callbackId: callbackId)
+        
+        events.off("up", callbackId: callbackId2)
         
         events.trigger("up")
         
@@ -132,6 +138,23 @@ class EventsTest: XCTestCase {
         XCTAssertTrue(count == 3)
         
         events.off("up", callbackId: "dummy-id")
+        
+        XCTAssertTrue(count == 3)
+        
+        count = 0
+        let callbackId3 = events.on("up") {
+            (events, options) in
+            count = count + 1
+            events.off("up", callbackId: (options?["callbackId"] as String))
+        }
+        
+        events.trigger("up")
+        
+        XCTAssertTrue(count == 1)
+        
+        events.trigger("up")
+        
+        XCTAssertTrue(count == 1)
     }
     
     func test_trigger(){
@@ -150,5 +173,43 @@ class EventsTest: XCTestCase {
         }
         events.trigger("nooption")
         XCTAssertTrue(count == 1)
+    }
+    
+    func test_mergeDictionries(){
+        let opt1:[String:Any] = ["msg":"hello", "age":15, "name":"Mike"]
+        let opt2:[String:Any] = ["msg":"world"]
+        let expetedOpt:[String:Any] = ["msg":"world", "age":15, "name":"Mike"]
+        
+        let mergedOpt = events.mergeDictionaries(opt1, dictionary: opt2)
+        assertOptions(expetedOpt, options2: mergedOpt)
+        
+        let mergedOpt2:[String:Any] = events.mergeDictionaries(nil, dictionary: opt2)
+        assertOptions(mergedOpt2, options2: opt2)
+        
+        let mergedOpt3:[String:Any] = events.mergeDictionaries(opt1, dictionary: nil)
+        assertOptions(opt1, options2: mergedOpt3)
+        
+        let mergedOpt4:[String:Any] = events.mergeDictionaries(nil, dictionary: nil)
+        assertOptions([String:Any](), options2: mergedOpt4)
+        
+        let opt3:[String:Any] = ["msg":"world", "phone":"0123-456"]
+        
+        let mergedOpt5 = events.mergeDictionaries(opt1, dictionary: opt3, canOverwrite:true)
+        assertOptions(["msg":"world", "age":15, "name":"Mike", "phone":"0123-456"], options2: mergedOpt5)
+        
+        let mergedOpt6 = events.mergeDictionaries(opt1, dictionary: opt3, canOverwrite:false)
+        assertOptions(["msg":"hello", "age":15, "name":"Mike", "phone":"0123-456"], options2: mergedOpt6)
+    }
+    
+    func assertOptions(options1:[String:Any], options2:[String:Any]){
+        XCTAssertTrue(options1.count == options2.count)
+        
+        for (key, value) in options1 {
+            if value is Int {
+                XCTAssertEqual(options2[key]! as Int, value as Int)
+            }else if value is String {
+                XCTAssertEqual(options2[key]! as String, value as String)
+            }
+        }
     }
 }

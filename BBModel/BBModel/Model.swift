@@ -133,11 +133,13 @@ public class Model: Events {
     
     override func triggerEvents(events:[String:Any], options:[String:Any]? = nil, relatedObj:AnyObject? = nil){
         for (guid, callback) in events {
+            let mOptions = self.mergeDictionaries(options, dictionary: ["callbackId":guid], canOverwrite: false)
+            
             if let castedCallback = callback as? (model:Model, options:[String:Any]?)->Void {
-                castedCallback(model: self, options: options)
+                castedCallback(model: self, options: mOptions)
                 
             }else if let castedCallback = callback as? (events:Events, options:[String:Any]?)->Void {
-                castedCallback(events: self, options: options)
+                castedCallback(events: self, options: mOptions)
             }
         }
     }

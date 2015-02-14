@@ -120,8 +120,6 @@ class CollectionTest: XCTestCase {
     }
     
     func test_remove(){
-        collection = Collection()
-        
         let user1 = MockUser()
         user1.name = "user1"
         let user2 = MockUser()
@@ -152,8 +150,6 @@ class CollectionTest: XCTestCase {
     }
     
     func test_reset(){
-        collection = Collection()
-        
         let user1 = MockUser()
         user1.name = "user1"
         let user2 = MockUser()
@@ -188,8 +184,6 @@ class CollectionTest: XCTestCase {
     }
     
     func test_push(){
-        collection = Collection()
-        
         let user1 = MockUser()
         let user2 = MockUser()
         let user3 = MockUser()
@@ -214,8 +208,6 @@ class CollectionTest: XCTestCase {
     }
     
     func test_pop(){
-        collection = Collection()
-        
         let user1 = MockUser()
         let user2 = MockUser()
         let user3 = MockUser()
@@ -236,8 +228,6 @@ class CollectionTest: XCTestCase {
     }
     
     func test_unshift(){
-        collection = Collection()
-        
         let user1 = MockUser()
         let user2 = MockUser()
         let user3 = MockUser()
@@ -262,8 +252,6 @@ class CollectionTest: XCTestCase {
     }
     
     func test_shift(){
-        collection = Collection()
-        
         let user1 = MockUser()
         let user2 = MockUser()
         let user3 = MockUser()
@@ -284,8 +272,6 @@ class CollectionTest: XCTestCase {
     }
     
     func test_at(){
-        collection = Collection()
-        
         let user1 = MockUser()
         let user2 = MockUser()
         let user3 = MockUser()
@@ -302,8 +288,6 @@ class CollectionTest: XCTestCase {
     }
     
     func test_slice(){
-        collection = Collection()
-        
         var users = [Model]()
         for i in 0 ..< 10 {
             let user = MockUser()
@@ -321,48 +305,7 @@ class CollectionTest: XCTestCase {
         }
     }
     
-    func test_mergeDictionries(){
-        collection = Collection()
-        let opt1:[String:Any] = ["msg":"hello", "age":15, "name":"Mike"]
-        let opt2:[String:Any] = ["msg":"world"]
-        let expetedOpt:[String:Any] = ["msg":"world", "age":15, "name":"Mike"]
-        
-        let mergedOpt = collection.mergeDictionaries(opt1, dictionary: opt2)
-        assertOptions(expetedOpt, options2: mergedOpt)
-        
-        let mergedOpt2:[String:Any] = collection.mergeDictionaries(nil, dictionary: opt2)
-        assertOptions(mergedOpt2, options2: opt2)
-        
-        let mergedOpt3:[String:Any] = collection.mergeDictionaries(opt1, dictionary: nil)
-        assertOptions(opt1, options2: mergedOpt3)
-        
-        let mergedOpt4:[String:Any] = collection.mergeDictionaries(nil, dictionary: nil)
-        assertOptions([String:Any](), options2: mergedOpt4)
-        
-        let opt3:[String:Any] = ["msg":"world", "phone":"0123-456"]
-        
-        let mergedOpt5 = collection.mergeDictionaries(opt1, dictionary: opt3, canOverwrite:true)
-        assertOptions(["msg":"world", "age":15, "name":"Mike", "phone":"0123-456"], options2: mergedOpt5)
-        
-        let mergedOpt6 = collection.mergeDictionaries(opt1, dictionary: opt3, canOverwrite:false)
-        assertOptions(["msg":"hello", "age":15, "name":"Mike", "phone":"0123-456"], options2: mergedOpt6)
-    }
-    
-    func assertOptions(options1:[String:Any], options2:[String:Any]){
-        XCTAssertTrue(options1.count == options2.count)
-        
-        for (key, value) in options1 {
-            if value is Int {
-                XCTAssertEqual(options2[key]! as Int, value as Int)
-            }else if value is String {
-                XCTAssertEqual(options2[key]! as String, value as String)
-            }
-        }
-    }
-    
     func test_models(){
-        collection = Collection()
-        
         let user1 = MockUser()
         let user2 = MockUser()
         let user3 = MockUser()
@@ -375,6 +318,22 @@ class CollectionTest: XCTestCase {
         
         XCTAssertTrue(users.count == 2)
         XCTAssertTrue(collection.length == 3)
+    }
+    
+    func test_on(){
+        var count:Int = 0
+        collection.on(Collection.events.ADD, callback: { (collection, options) -> Void in
+            count = count + 1
+            collection.off(Collection.events.ADD, callbackId: (options?["callbackId"] as String))
+        })
+        
+        collection.trigger(Collection.events.ADD)
+        
+        XCTAssertTrue(count == 1)
+        
+        collection.trigger(Collection.events.ADD)
+        
+        XCTAssertTrue(count == 1)
     }
 }
 
