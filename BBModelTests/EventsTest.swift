@@ -157,6 +157,31 @@ class EventsTest: XCTestCase {
         XCTAssertTrue(count == 1)
     }
     
+    func test_off_all(){
+        var count = 0
+        events.on("event1", callback: { [unowned self](events, options) in
+            count = count + 1
+        })
+        events.on("event2", callback: { [unowned self](events, options) in
+            count = count + 1
+        })
+        events.on("event3", callback: { [unowned self](events, options) in
+            count = count + 1
+        })
+        events.trigger("event1")
+        events.trigger("event2")
+        events.trigger("event3")
+        XCTAssertTrue(count == 3)
+        
+        //remove all
+        events.off()
+        
+        events.trigger("event1")
+        events.trigger("event2")
+        events.trigger("event3")
+        XCTAssertTrue(count == 3)
+    }
+    
     func test_trigger(){
         let opts:[String:Any] = ["sample":true]
         events.on("trigger") {
