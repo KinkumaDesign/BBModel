@@ -37,7 +37,11 @@ public class Events {
         return callbackID
     }
     
-    public func off(_ eventType:String? = nil, callbackId:String? = nil){
+    public func off(){
+        self.off(nil)
+    }
+    
+    public func off(eventType:String?, callbackId:String? = nil){
         if eventType == nil {
             for someEventType in _events.keys {
                 self.offWithEvent(someEventType)
@@ -47,7 +51,7 @@ public class Events {
         }
     }
     
-    internal func offWithEvent(eventType:String, callbackId:String? = nil){
+    private func offWithEvent(eventType:String, callbackId:String? = nil){
         if _events[eventType] == nil {
             return
         }
