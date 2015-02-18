@@ -78,7 +78,7 @@ class CollectionTest: XCTestCase {
         XCTAssertTrue(collection.length == 3)
         
         var count = 0
-        collection.on(Collection.events.ADD) {
+        collection.on(Collection.Event.ADD) {
             (model, collection, options) in
             count = count + 1
 //            println("model cid = \(model.cid)")
@@ -130,7 +130,7 @@ class CollectionTest: XCTestCase {
         collection.add([user1, user2, user3], options: nil)
         
         var removeCallbackCount = 0
-        collection.on(Collection.events.REMOVE) {
+        collection.on(Collection.Event.REMOVE) {
             (model, collection, options) in
             removeCallbackCount = removeCallbackCount + 1
         }
@@ -160,7 +160,7 @@ class CollectionTest: XCTestCase {
         collection.add([user1, user2, user3], options: nil)
         
         var callbackCount = 0
-        collection.on(Collection.events.RESET) {
+        collection.on(Collection.Event.RESET) {
             (collection, options) in
             callbackCount = callbackCount + 1
         }
@@ -322,16 +322,16 @@ class CollectionTest: XCTestCase {
     
     func test_on(){
         var count:Int = 0
-        collection.on(Collection.events.ADD, callback: { (collection, options) -> Void in
+        collection.on(Collection.Event.ADD, callback: { (collection, options) -> Void in
             count = count + 1
-            collection.off(Collection.events.ADD, callbackId: (options?["callbackId"] as String))
+            collection.off(Collection.Event.ADD, callbackId: (options?["callbackId"] as String))
         })
         
-        collection.trigger(Collection.events.ADD)
+        collection.trigger(Collection.Event.ADD)
         
         XCTAssertTrue(count == 1)
         
-        collection.trigger(Collection.events.ADD)
+        collection.trigger(Collection.Event.ADD)
         
         XCTAssertTrue(count == 1)
     }

@@ -9,7 +9,7 @@
 import Foundation
 
 public class Collection: Events {
-    public struct events {
+    public struct Event {
         public static let ADD:String = "add"
         public static let REMOVE:String = "remove"
         public static let RESET:String = "reset"
@@ -123,7 +123,7 @@ public class Collection: Events {
         let silent = (options["silent"] ?? false) as Bool
         if silent == false {
             for addedModel in toAdd {
-                self.trigger(Collection.events.ADD, options: options, relatedObj: addedModel)
+                self.trigger(Collection.Event.ADD, options: options, relatedObj: addedModel)
             }
         }
         return aModels
@@ -150,7 +150,7 @@ public class Collection: Events {
             
             if silent == false {
                 options["index"] = index
-                self.trigger(Collection.events.REMOVE, options: options, relatedObj: model)
+                self.trigger(Collection.Event.REMOVE, options: options, relatedObj: model)
             }
         }
         return toRemove
@@ -188,7 +188,7 @@ public class Collection: Events {
         
         let silent = (options?["silent"] ?? false) as Bool
         if silent == false {
-            self.trigger(Collection.events.RESET, options: options)
+            self.trigger(Collection.Event.RESET, options: options)
         }
     }
     

@@ -52,7 +52,7 @@ class ModelTest: XCTestCase {
         XCTAssertEqual(model.previousAttributes.count, 0)
         
         var count = 0
-        model.on(Model.events.CHANGE) { events, options in
+        model.on(Model.Event.CHANGE) { events, options in
             count += 1
         }
         
@@ -140,7 +140,7 @@ class ModelTest: XCTestCase {
     func test_on(){
         model = Model(attributes: ["msg":"hello", "age":15])
         
-        model.on(Model.events.CHANGE, callback: { [unowned self](aModel, options) -> Void in
+        model.on(Model.Event.CHANGE, callback: { [unowned self](aModel, options) -> Void in
             XCTAssertTrue(aModel === self.model)
             let msg = aModel.get("msg") as String
             XCTAssertEqual(msg, "world")
@@ -152,17 +152,17 @@ class ModelTest: XCTestCase {
         
         model = Model()
         var count:Int = 0
-        model.on(Model.events.CHANGE, callback: { (model, options) -> Void in
+        model.on(Model.Event.CHANGE, callback: { (model, options) -> Void in
             count = count + 1
             
-            model.off(Model.events.CHANGE, callbackId: (options?["callbackId"] as String))
+            model.off(Model.Event.CHANGE, callbackId: (options?["callbackId"] as String))
         })
         
-        model.trigger(Model.events.CHANGE)
+        model.trigger(Model.Event.CHANGE)
         
         XCTAssertTrue(count == 1)
         
-        model.trigger(Model.events.CHANGE)
+        model.trigger(Model.Event.CHANGE)
         
         XCTAssertTrue(count == 1)
     }

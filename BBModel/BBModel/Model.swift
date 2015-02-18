@@ -9,7 +9,7 @@
 import Foundation
 
 public class Model: Events {
-    public struct events {
+    public struct Event {
         public static let CHANGE:String = "change"
     }
     private struct uniqueIdNum {
@@ -76,7 +76,7 @@ public class Model: Events {
         }
         
         if silent == false {
-            trigger(Model.events.CHANGE, options: options)
+            trigger(Model.Event.CHANGE, options: options)
         }
     }
     
