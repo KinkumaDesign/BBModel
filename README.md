@@ -119,7 +119,7 @@ var joe = Person(name:"Joe", age:18)
  
 //Register Change event
 //It emits when model's properties change.
-joe.on(Model.events.CHANGE) {
+joe.on(Model.Event.CHANGE) {
     (model, options) in
      
     let aJoe = model as Person
@@ -175,14 +175,14 @@ var mike = Person(name:"Mike")
 var personCollection =  PersonCollection(models: nil, options: nil)
  
 //register Add event
-personCollection.on(Collection.events.ADD) {
+personCollection.on(Collection.Event.ADD) {
     (model, collection, options) in
     let p = model as Person
     println("Person \(p.name) is added")
 }
  
 //register Remove event
-personCollection.on(Collection.events.REMOVE) {
+personCollection.on(Collection.Event.REMOVE) {
     (model, collection, options) in
     let p = model as Person
     println("Person \(p.name) is removed")
