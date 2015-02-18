@@ -31,12 +31,14 @@ event.trigger("myevent") //output => callback 1
 
 It removes callbacks for some event using off("eventName"). It also remove specified callback using callbackId. You can get callbackId from events.on method's return value.
 
-Note: If you use self keyword in closure, you have to use [unowned self] in it to prevent memory leak.
+Note: If you use self keyword in a closure, you have to use [unowned self] in it to prevent memory leak.
 
 Resolving Strong Reference Cycles for Closures
 <https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/AutomaticReferenceCounting.html#//apple_ref/doc/uid/TP40014097-CH20-ID57>
 
-You must remove all callbacks before Events object deinit. off() with no argument removes call callbacks.
+You must remove all callbacks before Events object deinit. 
+
+off() with no argument removes all callbacks.
 
 ```swift
 var event:Events = Events()
@@ -56,7 +58,7 @@ let callbackId = event.on("myevent") {
     //options contains callback's id
     let id = options["callbackId"]
  
-    //You can remove this callback inner closure
+    //You can remove this callback in the closure
     //event.off("myevent", callbackId:id) 
 }
  
@@ -80,9 +82,9 @@ event.trigger("myevent") //no callback
 
 ## Model
 
-Model is properties container.
+Model is a properties container.
 
-Suppose you make below sub class.
+Suppose you make a below sub class.
 
 ```swift
 class Person: Model{
@@ -147,9 +149,9 @@ tanaka.set("name", "Special Joe", options:["silent": true])
 
 ## Collection
 
-Collection is Model's collection class.
+Collection is a Model's collection class.
 
-Suppose you make below sub class.
+Suppose you make a below sub class.
 
 ```swift
 class PersonCollection: Collection {
