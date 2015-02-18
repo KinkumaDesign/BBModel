@@ -204,8 +204,12 @@ println("collection length = \(personCollection.length)") // 0
  
 personCollection.add([jane, mike])
  
-//set is convenience method
-//If there is a same property key it overwrites it. If there is no same propety key it adds. If it is not included arguments it removes.
+/** 
+ * set is convenience method
+ * If there is a same property key it overwrites it. 
+ * If there is no same propety key it adds. 
+ * If it is not included arguments it removes.
+ */
 personCollection.set([joe, mike])
  
 //other methods
